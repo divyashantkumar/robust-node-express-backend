@@ -10,8 +10,8 @@ class CustomError extends Error {
             {
                 errorCode: 500,
                 errorType: 'INTERNAL_SERVER_ERROR',
-                message: '',
-                property: undefined
+                message: 'Internal Server Error',
+                property: null
             }
         ]; // message:string, property:string
     }

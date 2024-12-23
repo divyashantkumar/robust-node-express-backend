@@ -1,3 +1,8 @@
 {"level":"\u001b[32minfo\u001b[39m","message":"Home Page","timestamp":"2024-12-23T10:24:52.493Z"}
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/\",\"status\":\"304\",\"responseTime\":\"22.673\"}","timestamp":"2024-12-23T10:24:52.510Z"}
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/stylesheet/home.css\",\"status\":\"200\",\"responseTime\":\"6.627\"}","timestamp":"2024-12-23T10:24:52.554Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/api/\",\"status\":\"404\",\"responseTime\":\"31.828\"}","timestamp":"2024-12-23T17:02:43.601Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"Home Page","timestamp":"2024-12-23T17:02:51.586Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/\",\"status\":\"200\",\"responseTime\":\"7.267\"}","timestamp":"2024-12-23T17:02:51.592Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"sampleService","timestamp":"2024-12-23T17:03:01.093Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/api/sample\",\"status\":\"200\",\"responseTime\":\"12.241\"}","timestamp":"2024-12-23T17:03:01.102Z"}
