@@ -26,7 +26,7 @@
 - [express-mongo-sanitize](https://github.com/fiznool/express-mongo-sanitize#readme)
 - [xss-clean](https://www.npmjs.com/package/xss-clean) OR [xss-filters](https://www.npmjs.com/package/xss-filters)
 
-#### Fire up Server
+#### Fire up Dev Server
 
 - [nodemon](https://nodemon.io/)
 
