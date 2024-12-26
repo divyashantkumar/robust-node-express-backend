@@ -9,6 +9,7 @@ import CustomError from "../error/customeError.js";
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  */
+
 const globalErrorHandler = (err, req, res, next) => {
     // Log the error for debugging purposes
     console.log("globalErrorHandler : ", err);

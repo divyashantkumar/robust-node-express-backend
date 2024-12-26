@@ -2,8 +2,8 @@
 import 'express-async-errors';
 import boolParser from 'express-query-boolean';
 
-import path from "path";
 import express from "express";
+import path from "path";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
@@ -17,13 +17,12 @@ import {
 import globalErrorHandler from './middlewares/globalErrorHandler.js';
 
 
+const app = express();
+
 // Custom Morgan Format for logging requests and responses in the console 
 const morganFormat = ":method :url :status :response-time ms";
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Logging Middleware
+// 1. Logging Middleware
 app.use(
     morgan(morganFormat, {
         stream: {
@@ -41,13 +40,13 @@ app.use(
 );
 
 
-// Application Security Middleware
+// 2. Application Security Middleware
 app.use('/api', rateLimiterMiddleware); // Apply rate limiter only to API requests
 app.use(helmetMiddleware); // Set security headers in HTTP responses
 app.use(hppmiddleware); // Prevent HTTP parameter pollution
 
 
-// CORS configuration
+// 3. CORS configuration
 const corsOptions = {
     origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps or curl requests)
@@ -87,7 +86,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-// Body Parser Middleware
+// 4. Body Parser Middleware
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(boolParser()); // Parse boolean values in query parameters
@@ -95,16 +94,19 @@ app.use(boolParser()); // Parse boolean values in query parameters
 app.use(cookieParser());
 
 
-// Static Files Middleware
+// 5. Static Files Middleware
 app.set('view engine', 'ejs');      // Set up view Engine or Template Engine
-app.set('views', path.join(process.cwd(), 'views'))         // Set up views folder or template folder
+app.set('views', path.join(process.cwd(), 'src', 'views'))         // Set up views folder or template folder
 app.use(express.static('public'));  // Set up static folder for serving static files like css, images, js, etc.
 
 
-// Home Page Handler
+// 6. Routes
+app.use('/api/v1', sampleRouter);
+
+// 7. Home Page Handler
 app.use(RegExp('/$'), (req, res, next) => {
     try {
-        logger.info('Home Page');
+        logger.info('Hello Home Page');
         res.status(200).render('home');
     } catch (error) {
         throw error;
@@ -112,22 +114,15 @@ app.use(RegExp('/$'), (req, res, next) => {
 });
 
 
-// Routes
-app.use('/api', sampleRouter);
+// 8. Global Error Handlers    
+app.use(globalErrorHandler);
 
 
-// 404 Global Path Handler
+// 9. 404 Global Path Handler
 app.use((req, res, next) => {
     res.status(404);
     res.render('error404');
 });
 
-// Global Error Handlers    
-app.use(globalErrorHandler);
 
-
-// Start Server 
-app.listen(PORT, (err) => {
-    if (err) console.log(err);
-    console.log(`Server listening on port ${PORT}`);
-});
+export default app;
