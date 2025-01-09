@@ -7,7 +7,7 @@ import path from "path";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import logger from "./util/loggers.js";
+import logger from "./utils/loggers.js";
 import sampleRouter from './route/sample.js'
 import {
     rateLimiterMiddleware,

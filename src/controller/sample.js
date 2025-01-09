@@ -1,7 +1,7 @@
 import { sampleService } from "../service/sample.js";
-import logger from "../util/loggers.js";
-import { ApiResponse } from "../util/ApiResponse.js";
-import { asyncHandler } from "../util/asyncHandler.js";
+import logger from "../utils/loggers.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 
 // export function sampleController(req, res) {

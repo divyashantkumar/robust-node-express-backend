@@ -1,4 +1,4 @@
-import CustomError from "../error/customeError.js";
+import CustomError from "../errors/customeError.js";
 
 /**
  * Global error handler middleware.
