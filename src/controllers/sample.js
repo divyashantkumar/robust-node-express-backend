@@ -1,4 +1,4 @@
-import { sampleService } from "../service/sample.js";
+import { sampleService } from "../services/sample.js";
 import logger from "../utils/loggers.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";

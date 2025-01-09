@@ -8,7 +8,7 @@ import cors from 'cors'
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import logger from "./utils/loggers.js";
-import sampleRouter from './route/sample.js'
+import sampleRouter from './routes/sample.js'
 import {
     rateLimiterMiddleware,
     helmetMiddleware,
