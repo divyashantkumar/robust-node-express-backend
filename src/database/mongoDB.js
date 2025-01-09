@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { DB_NAME } from "../constants";
 
 const MAX_RETRY_ATTEMPTS = 3;
 const RETRY_DELAY = 5000; // 5 seconds
@@ -53,7 +54,7 @@ class DatabaseConnnection {
                 mongoose.set("debug", true);
             }
 
-            await mongoose.connect(MONGODB_URI, connectionOptions);
+            await mongoose.connect(`${MONGODB_URI}/${DB_NAME}`, connectionOptions);
             this.retryAttempts = 0; // Reset retry attempts on successful connection
         } catch (error) {
             console.error("❌ Mongoose connection error: ", error);
