@@ -2,6 +2,8 @@
 import 'express-async-errors';
 import boolParser from 'express-query-boolean';
 
+import { config } from 'dotenv';
+config();
 import express from "express";
 import path from "path";
 import cors from 'cors'
@@ -28,7 +30,7 @@ const app = express();
 const morganFormat = ":method :url :status :response-time ms";
 
 // 1. Logging Middleware
-app.use(morgan(morganFormat, morganOptions));
+if(process.env.NODE_ENV === "development") app.use(morgan(morganFormat, morganOptions));
 
 
 // 2. Application Security Middleware
