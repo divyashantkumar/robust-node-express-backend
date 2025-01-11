@@ -8,13 +8,18 @@ import cors from 'cors'
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import logger from "./utils/loggers.js";
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import hpp from 'hpp';
+import { globalErrorHandler } from './middlewares/globalErrorHandler.js';
+import { 
+    morganOptions, 
+    rateLimitOptions, 
+    helmetOptions, 
+    hppOptions, 
+    corsOptions, 
+} from './utils/middlewareOptions.js';
 import sampleRouter from './routes/sample.js'
-import {
-    rateLimiterMiddleware,
-    helmetMiddleware,
-    hppmiddleware
-} from "./middlewares/security.js";
-import globalErrorHandler from './middlewares/globalErrorHandler.js';
 
 
 const app = express();
@@ -23,66 +28,16 @@ const app = express();
 const morganFormat = ":method :url :status :response-time ms";
 
 // 1. Logging Middleware
-app.use(
-    morgan(morganFormat, {
-        stream: {
-            write: (message) => {
-                const logObject = {
-                    method: message.split(" ")[0],
-                    url: message.split(" ")[1],
-                    status: message.split(" ")[2],
-                    responseTime: message.split(" ")[3],
-                };
-                logger.info(JSON.stringify(logObject));
-            },
-        },
-    })
-);
+app.use(morgan(morganFormat, morganOptions));
 
 
 // 2. Application Security Middleware
-app.use('/api', rateLimiterMiddleware); // Apply rate limiter only to API requests
-app.use(helmetMiddleware); // Set security headers in HTTP responses
-app.use(hppmiddleware); // Prevent HTTP parameter pollution
+app.use('/api', rateLimit(rateLimitOptions)); // Apply rate limiter only to API requests
+app.use(helmet(helmetOptions)); // Set security headers in HTTP responses
+app.use(hpp(hppOptions)); // Prevent HTTP parameter pollution
 
 
 // 3. CORS configuration
-const corsOptions = {
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-
-        // Check if the origin is allowed
-        const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173'];
-
-        // //regEx to test for divyashant.in subdomains 
-        // const allowedOriginsRegex = /^https?:\/\/([a-z0-9-]+\.)?divyashant\.in(:\d+)?$/;
-
-        console.log('Request origin:', origin);
-
-        if (allowedOrigins.indexOf(origin) === -1 /* && !allowedOriginsRegex.test(origin) */) {
-            const error = new Error('Not allowed by CORS');
-            error.status = 403;
-            return callback(error);
-        }
-        return callback(null, true);
-    },
-
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // Allow only these methods
-    allowedHeaders: [
-        "Content-Type",
-        "Authorization",
-        "X-Requested-With",
-        "device-remember-token",
-        "Access-Control-Allow-Origin",
-        "Origin",
-        "Accept",
-    ], // Allow only these headers
-    exposedHeaders: ['Content-Length'], // Expose these headers to the client
-    credentials: true, // Allow cookies and authentication headers to be sent across domains
-    maxAge: 3600, // Cache CORS preflight requests for 1 hour
-    optionsSuccessStatus: 204,
-}
 app.use(cors(corsOptions));
 
 

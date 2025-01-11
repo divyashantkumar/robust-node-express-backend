@@ -7,7 +7,7 @@ import {
     generateTokens,
     cookieOptions
 } from "../utils/tokens.js";
-import CustomError from "../errors/customeError.js";
+import CustomError from "../errors/custome.error.js";
 
 
 export const isAuthenticated = asyncHandler(async (req, res, next) => {

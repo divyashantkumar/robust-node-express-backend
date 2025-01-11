@@ -1,59 +1,49 @@
-import CustomError from "../errors/customeError.js";
+import CustomError from "../errors/custome.error.js";
+import { Error as MongooseError } from "mongoose";
 
-/**
- * Global error handler middleware.
- * Handles errors and sends appropriate responses based on error type.
- * 
- * @param {Object} err - The error object.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
- */
+// Handle specific MongoDB errors
+export const handleMongoError = (err) => {
+    if (err.name === 'CastError') {
+        return new CustomError(`Invalid ${err.path}: ${err.value}`, 400);
+    }
+    if (err.code === 11000) {
+        const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+        return new CustomError(`Duplicate field value: ${value}. Please use another value!`, 400);
+    }
+    if (err.name === 'ValidationError') {
+        const errors = Object.values(err.errors).map(el => el.message);
+        return new CustomError(`Invalid input data. ${errors.join('. ')}`, 400);
+    }
+    return err;
+};
 
-const globalErrorHandler = (err, req, res, next) => {
-    // Log the error for debugging purposes
-    console.log("globalErrorHandler : ", err);
+export const globalErrorHandler = (err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    const errorMessage = err.message || 'Something went wrong!';
 
-    // Handle custom errors
     if (err instanceof CustomError) {
-        res?.status(err?.errorCode).send({ errors: err.serializeError() });
-        return;
+        return res
+            .status(statusCode)
+            .json(
+                new CustomError(errorMessage, statusCode, err.errors)
+            );
+    } else if (err instanceof MongooseError) {
+        return res
+            .status(statusCode)
+            .json(
+                handleMongoError(err)
+            );
     }
 
-    // Handle Neo4j database errors
-    if (err?.constructor?.name === "Neo4jError") {
-        res?.status(500)?.send({
-            errors: [{
-                errorCode: 500,
-                errorType: "Neo4j_DB_ERROR!",
-                neo4jDBErrorCode: err?.code,
-                message: err
-            }]
-        });
-        return;
-    } 
-    
-    // Handle Payload Too Large errors
-    if (err?.code === 413) {
-        res?.status(413)?.send({
-            errors: [{
-                errorCode: 413,
-                errorType: "PAYLOAD_TOO_LARGE_ERROR!",
-                message: err
-            }]
-        });
-        return;
-    }
-    
-    // Handle all other errors as internal server errors
-    res?.status(500)?.send({
-        errors: [{
-            errorCode: 500,
-            errorType: "INTERNAL_SERVER_ERROR!",
-            message: "Something unexpected happend!"
-        }]
-    });
-    
-}
+    return res.status(500).json({ status: 'error', message: 'Something went wrong! Internal Server Error' });
+};
 
-export default globalErrorHandler;
+
+
+// Handle JWT errors
+export const handleJWTError = () =>
+    new CustomError('Invalid token. Please log in again!', 401);
+
+export const handleJWTExpiredError = () =>
+    new CustomError('Your token has expired! Please log in again.', 401);
+

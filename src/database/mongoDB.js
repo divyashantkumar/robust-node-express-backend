@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
-import { DB_NAME } from "../constants";
+import { DB_NAME } from "../constants.js";
+import { config } from "dotenv";
+config();
 
 const MAX_RETRY_ATTEMPTS = 3;
 const RETRY_DELAY = 5000; // 5 seconds
@@ -42,8 +44,8 @@ class DatabaseConnnection {
             if (!MONGODB_URI) throw new Error("MONGODB_URI is not defined in .env file");
 
             const connectionOptions = {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
+                // useNewUrlParser: true,
+                // useUnifiedTopology: true,
                 maxPoolSize: 10, // in free tier 10 is supported
                 serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
                 socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
