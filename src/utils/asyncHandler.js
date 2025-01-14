@@ -4,7 +4,7 @@ export function asyncHandler(requestHandlerFn) {
         try {
             await requestHandlerFn(req, res, next);
         } catch (error) {
-            next(error);
+            throw error;
         }
     }
 }
