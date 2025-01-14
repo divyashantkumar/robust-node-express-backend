@@ -16,6 +16,15 @@ class CustomError extends Error {
             Error.captureStackTrace(this, this.constructor);
         }
     }
+    serializeErrors() {
+        return {
+            message: this.message,
+            errors: this.errors,
+            statusCode: this.statusCode,
+            success: this.success,
+            data: this.data
+        }
+    };
 }
 
 export default CustomError;
